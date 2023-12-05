@@ -17,11 +17,17 @@ namespace SpotifyInsights
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		internal IEnumerable<SpotifyPlayCount> PlayCounts { get; private set; }
 		internal IEnumerable<SpotifyPlay> Plays { get; private set; }
 
 		public MainWindow()
 		{
 			InitializeComponent();
+		}
+
+		private void AnalyzeData()
+		{
+			PlayCounts = SpotifyAnalyzer.CountSpotifyPlays(Plays);
 		}
 
 		private async void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -52,6 +58,7 @@ namespace SpotifyInsights
 					}
 
 					Plays = Plays.Concat(newData);
+					AnalyzeData();
 				}
 			}
 			catch (Exception ex) {

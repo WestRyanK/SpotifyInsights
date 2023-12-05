@@ -12,6 +12,13 @@ namespace SpotifyInsights
 		public long MsPlayed { get; set; }
 	}
 
+	internal record struct SpotifyPlayCount
+	{
+		public string ArtistName;
+		public string TrackName;
+		public int Plays;
+	}
+
 	internal class SpotifyAnalyzer
 	{
 		public static async Task<List<SpotifyPlay>?> LoadFromJsonAsync(string path)
@@ -22,5 +29,16 @@ namespace SpotifyInsights
 				 PropertyNameCaseInsensitive = true,
 			});
 		}
+
+		public static IEnumerable<SpotifyPlayCount> CountSpotifyPlays(IEnumerable<SpotifyPlay> plays) =>
+			plays
+				.GroupBy(p => (p.ArtistName, p.TrackName))
+				.Select(t => new SpotifyPlayCount
+				{
+					ArtistName = t.First().ArtistName,
+					TrackName = t.First().TrackName,
+					Plays = t.Count()
+				})
+				.OrderByDescending(p => p.Plays);
 	}
 }

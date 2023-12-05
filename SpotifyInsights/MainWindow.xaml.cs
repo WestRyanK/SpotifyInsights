@@ -23,7 +23,7 @@ namespace SpotifyInsights
 
 		private void AnalyzeData()
 		{
-			ViewModel.PlayCounts = SpotifyAnalyzer.CountSpotifyPlays(ViewModel.Plays);
+			ViewModel.PlayCounts = SpotifyAnalyzer.CountSpotifyPlays(ViewModel.Plays, new DateTime(2023, 1, 1), new DateTime(2024, 1, 1));
 		}
 
 		private async void BrowseButton_Click(object sender, RoutedEventArgs e)

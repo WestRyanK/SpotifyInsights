@@ -32,8 +32,9 @@ namespace SpotifyInsights
 			});
 		}
 
-		public static IEnumerable<SpotifyPlayCount> CountSpotifyPlays(IEnumerable<SpotifyPlay> plays) =>
+		public static IEnumerable<SpotifyPlayCount> CountSpotifyPlays(IEnumerable<SpotifyPlay> plays, DateTime? rangeStart, DateTime? rangeEnd) =>
 			plays
+			.Where(p => (!rangeStart.HasValue || p.EndTime > rangeStart.Value) && (!rangeEnd.HasValue || p.EndTime < rangeEnd.Value))
 				.GroupBy(p => (p.ArtistName, p.TrackName))
 				.Select(t => new SpotifyPlayCount
 				{

@@ -33,35 +33,41 @@ namespace SpotifyInsights
 				Microsoft.Win32.OpenFileDialog dialog = new()
 				{
 					Filter = "JSON|*.json",
-					AddExtension = true
+					AddExtension = true,
+					Multiselect = true,
 				};
 
 				if (dialog.ShowDialog() == true)
 				{
-					string jsonPath = dialog.FileName;
-					if (ViewModel.Plays == null)
-					{
-						ViewModel.Plays = [];
-					}
-
-					var newData = await SpotifyAnalyzer.LoadFromJsonAsync(jsonPath);
-					if (newData == null)
-					{
-						string errorMessage = $"Error loading '{jsonPath}'";
-						Debug.WriteLine(errorMessage);
-						MessageBox.Show(errorMessage);
-						return;
-					}
-
-					ViewModel.Plays = ViewModel.Plays.Concat(newData);
+					ViewModel.Plays = await LoadData(dialog.FileNames);
 					AnalyzeData();
 				}
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				string errorMessage = $"Error: {ex}";
 				Debug.WriteLine(errorMessage);
 				MessageBox.Show(errorMessage);
 			}
+		}
+
+		private async Task<IEnumerable<SpotifyPlay>> LoadData(string[] jsonPaths)
+		{
+			IEnumerable<SpotifyPlay> plays = [];
+			foreach (var jsonPath in jsonPaths)
+			{
+				var newData = await SpotifyAnalyzer.LoadFromJsonAsync(jsonPath);
+				if (newData == null)
+				{
+					string errorMessage = $"Error loading '{jsonPath}'";
+					Debug.WriteLine(errorMessage);
+					MessageBox.Show(errorMessage);
+					break;
+				}
+
+				plays = plays.Concat(newData);
+			}
+			return plays;
 		}
 	}
 

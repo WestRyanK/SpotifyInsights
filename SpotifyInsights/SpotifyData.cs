@@ -18,6 +18,7 @@ namespace SpotifyInsights
 		public string ArtistName { get; set; }
 		public string TrackName { get; set; }
 		public int Plays { get; set; }
+		public int Rank { get; set; }
 	}
 
 	internal class SpotifyAnalyzer
@@ -40,6 +41,11 @@ namespace SpotifyInsights
 					TrackName = t.First().TrackName,
 					Plays = t.Count()
 				})
-				.OrderByDescending(p => p.Plays);
+				.OrderByDescending(p => p.Plays)
+				.Select((p, i) =>
+				{
+					p.Rank = i + 1;
+					return p;
+				});
 	}
 }

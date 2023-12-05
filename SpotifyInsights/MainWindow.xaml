@@ -23,6 +23,7 @@
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding PlayCounts}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" AutoGenerateColumns="False">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Rank" Width="50" Binding="{Binding Rank}"/>
                 <DataGridTextColumn Header="Artist" Width="150" Binding="{Binding ArtistName}"/>
                 <DataGridTextColumn Header="Track" Width="150" Binding="{Binding TrackName}"/>
                 <DataGridTextColumn Header="Plays" Width="50" Binding="{Binding Plays}"/>

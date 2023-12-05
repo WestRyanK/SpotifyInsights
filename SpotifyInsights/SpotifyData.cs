@@ -6,7 +6,8 @@ namespace SpotifyInsights
 {
 	internal record struct SpotifyPlay
 	{
-		public string EndTime { get; set; }
+		[JsonConverter(typeof(DateTimeJsonConverter))]
+		public DateTime EndTime { get; set; }
 		public string ArtistName { get; set; }
 		public string TrackName { get; set; }
 		public long MsPlayed { get; set; }

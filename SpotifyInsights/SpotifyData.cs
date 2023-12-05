@@ -15,9 +15,9 @@ namespace SpotifyInsights
 
 	internal record struct SpotifyPlayCount
 	{
-		public string ArtistName;
-		public string TrackName;
-		public int Plays;
+		public string ArtistName { get; set; }
+		public string TrackName { get; set; }
+		public int Plays { get; set; }
 	}
 
 	internal class SpotifyAnalyzer

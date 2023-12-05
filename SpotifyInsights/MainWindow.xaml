@@ -20,5 +20,13 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button x:Name="BrowseButton" Content="Browse..." Click="BrowseButton_Click" />
         </StackPanel>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding PlayCounts}" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Artist" Width="150" Binding="{Binding ArtistName}"/>
+                <DataGridTextColumn Header="Track" Width="150" Binding="{Binding TrackName}"/>
+                <DataGridTextColumn Header="Plays" Width="50" Binding="{Binding Plays}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

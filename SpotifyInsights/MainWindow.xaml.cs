@@ -1,14 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SpotifyInsights
 {
@@ -17,17 +8,22 @@ namespace SpotifyInsights
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		internal IEnumerable<SpotifyPlayCount> PlayCounts { get; private set; }
-		internal IEnumerable<SpotifyPlay> Plays { get; private set; }
+		private MainViewModel ViewModel
+		{
+			get => (MainViewModel)base.DataContext;
+			set => base.DataContext = value;
+		}
 
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			ViewModel = new();
 		}
 
 		private void AnalyzeData()
 		{
-			PlayCounts = SpotifyAnalyzer.CountSpotifyPlays(Plays);
+			ViewModel.PlayCounts = SpotifyAnalyzer.CountSpotifyPlays(ViewModel.Plays);
 		}
 
 		private async void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -43,9 +39,9 @@ namespace SpotifyInsights
 				if (dialog.ShowDialog() == true)
 				{
 					string jsonPath = dialog.FileName;
-					if (Plays == null)
+					if (ViewModel.Plays == null)
 					{
-						Plays = [];
+						ViewModel.Plays = [];
 					}
 
 					var newData = await SpotifyAnalyzer.LoadFromJsonAsync(jsonPath);
@@ -57,7 +53,7 @@ namespace SpotifyInsights
 						return;
 					}
 
-					Plays = Plays.Concat(newData);
+					ViewModel.Plays = ViewModel.Plays.Concat(newData);
 					AnalyzeData();
 				}
 			}
@@ -67,5 +63,23 @@ namespace SpotifyInsights
 				MessageBox.Show(errorMessage);
 			}
 		}
+	}
+
+	internal class MainViewModel : ViewModelBase
+	{
+		private IEnumerable<SpotifyPlayCount> _playCounts = [];
+		public IEnumerable<SpotifyPlayCount> PlayCounts
+		{
+			get => _playCounts;
+			set => SetProperty(ref _playCounts, value);
+		}
+
+		private IEnumerable<SpotifyPlay> _plays = [];
+		public IEnumerable<SpotifyPlay> Plays
+		{
+			get => _plays;
+			set => SetProperty(ref _plays, value);
+		}
+
 	}
 }
